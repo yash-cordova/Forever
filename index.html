@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Magical Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --main-bg: linear-gradient(135deg, #f8cdda 0%, #1d2b64 100%);
+            --card-bg: rgba(255,255,255,0.85);
+            --accent: #ff6b81;
+            --accent2: #a18cd1;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--main-bg);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+        .floating-hearts {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            color: var(--accent);
+            opacity: 0.8;
+            animation: float 7s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(1); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(30, 22, 54, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 0.5s;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            padding: 40px 30px;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 1s;
+        }
+        .modal-content h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .modal-content p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .modal-content button {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255,107,129,0.2);
+            transition: background 0.3s, transform 0.2s;
+        }
+        .modal-content button:hover {
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 10px 60px 10px;
+        }
+        .header {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+        }
+        .header h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #a18cd1;
+        }
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .timeline {
+            position: relative;
+            margin: 60px 0 40px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent2));
+            transform: translateX(-50%);
+            border-radius: 3px;
+            z-index: 0;
+        }
+        .timeline-event {
+            position: relative;
+            width: 100%;
+            margin: 50px 0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            z-index: 1;
+        }
+        .timeline-event.left .timeline-card {
+            margin-right: 55%;
+            margin-left: 0;
+            text-align: right;
+        }
+        .timeline-event.right .timeline-card {
+            margin-left: 55%;
+            margin-right: 0;
+            text-align: left;
+        }
+        .timeline-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 32px 28px;
+            min-width: 260px;
+            max-width: 350px;
+            position: relative;
+            animation: fadeInUp 1s;
+            border: 2px solid var(--accent2);
+        }
+        .timeline-card .date {
+            font-size: 1.1rem;
+            color: var(--accent2);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .timeline-card .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        .timeline-card .desc {
+            color: #444;
+            font-size: 1.08rem;
+            line-height: 1.6;
+        }
+        .timeline-card img {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 18px;
+            box-shadow: 0 2px 12px rgba(161,140,209,0.18);
+        }
+        .proposal-section {
+            text-align: center;
+            margin: 70px 0 0 0;
+            padding: 50px 20px;
+            background: linear-gradient(120deg, #f8cdda 0%, #a18cd1 100%);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            color: #fff;
+            animation: fadeIn 1.2s;
+        }
+        .proposal-section .proposal-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 2px 8px #a18cd1;
+        }
+        .proposal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-yes {
+            background: linear-gradient(45deg, #ff6b81, #a18cd1);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255,107,129,0.3);
+        }
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255,107,129,0.5);
+        }
+        .btn-no {
+            background: linear-gradient(45deg, #b2bec3, #636e72);
+            color: white;
+            position: relative;
+        }
+        .success-section {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #ff6b81, #a18cd1);
+            border-radius: 30px;
+            margin: 60px 0;
+            color: white;
+            animation: fadeIn 1.2s;
+        }
+        .success-section h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .success-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .celebration {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 900px) {
+            .timeline-event.left .timeline-card,
+            .timeline-event.right .timeline-card {
+                margin: 0 auto;
+                text-align: left;
+            }
+            .timeline::before {
+                left: 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 2.1rem; }
+            .timeline {
+                margin: 30px 0 20px 0;
+            }
+            .timeline::before {
+                left: 18px;
+                width: 4px;
+            }
+            .timeline-event.left, .timeline-event.right {
+                flex-direction: column;
+                align-items: flex-start;
+                margin: 0 0 40px 0;
+            }
+            .timeline-card {
+                margin: 0 0 0 40px;
+                min-width: 0;
+                max-width: 100%;
+                width: calc(100vw - 60px);
+                padding: 18px 10px;
+                box-shadow: 0 2px 12px rgba(161,140,209,0.18);
+            }
+            .timeline-card img {
+                width: 100%;
+                margin-top: 12px;
+            }
+            .proposal-section, .success-section {
+                padding: 24px 5px;
+                border-radius: 18px;
+                font-size: 1rem;
+            }
+            .proposal-section .proposal-text, .success-section h2 {
+                font-size: 1.3rem;
+            }
+            .btn, .btn-yes, .btn-no {
+                width: 100%;
+                font-size: 1.1rem;
+                padding: 14px 0;
+                margin-bottom: 10px;
+            }
+            .modal-content {
+                padding: 18px 8px;
+                max-width: 95vw;
+                border-radius: 18px;
+            }
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+            .modal-content button {
+                width: 100%;
+                font-size: 1.1rem;
+                padding: 14px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    <!-- Modal Popup -->
+    <div class="modal" id="welcomeModal">
+        <div class="modal-content">
+            <h2>Welcome, My Love!</h2>
+            <p>
+                Babyy, re-living the moment. I know you are mine, I'm yours. But let me propose you like I would have done, if I have done it.<br><br>
+                Let's relive our moment first.<br><br>
+                From the very first moment our paths crossed, my world has been brighter, softer, and filled with a magic I never knew existed. Today, I want to take you on a journey through the moments that made us "us"—a journey of laughter, discovery, and love.<br><br>
+                Are you ready to relive our story and step into a new chapter with me?
+            </p>
+            <button onclick="proceedToJourney()">Proceed to Our Journey</button>
+        </div>
+    </div>
+    <!-- Audio (hidden, plays after modal) -->
+    <audio id="backgroundMusic" loop>
+        <source src="Tu Jo Mila Ringtone Download.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="container" id="mainContent" style="display:none;">
+        <!-- Header -->
+        <div class="header">
+            <h1>Our Magical Journey</h1>
+            <p>Every heartbeat, every moment, every memory—together.</p>
+        </div>
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-event left">
+                <div class="timeline-card">
+                    <div class="date">November 29, 2024</div>
+                    <div class="title">When Our Eyes First Met</div>
+                    <div class="desc">
+                        In a world full of strangers, destiny brought us face to face. That day, the universe whispered, and my heart listened. I saw a spark in your eyes—a promise of a thousand beautiful tomorrows.
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-card">
+                    <div class="date">December 20, 2024</div>
+                    <div class="title">Hearts Unlocked</div>
+                    <div class="desc">
+                        We began to share our dreams, our fears, our laughter. Every word, every secret, every smile—woven into the tapestry of our growing bond. I found a friend, a confidant, and a soulmate in you.
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-card">
+                    <div class="date">December 23, 2024</div>
+                    <div class="title">Our First Non Date</div>
+                    <div class="desc">
+                        Our first outing together—two souls, one story. We opened up, we laughed, we understood each other in ways words can't describe. That day, I realized my heart had found its home.
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-card">
+                    <div class="date">January 1, 2025</div>
+                    <div class="title">Hand in Hand, Forever Begins</div>
+                    <div class="desc">
+                        The day we made it official. No longer just "I" or "you"—from this moment, it's "us". My world changed, and I knew I wanted to hold your hand through every season of life.
+                    </div>
+                    <img src="handinhand.jpg" alt="Hand in Hand" />
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-card">
+                    <div class="date">January 6, 2025</div>
+                    <div class="title">First Cake Chai Date</div>
+                    <div class="desc">
+                        A cozy café, my chai and her cake—our first cake chai date was a sweet beginning to countless more. Every bite, every sip, every smile shared across the table made my heart warmer. With you, even the simplest moments become unforgettable memories.
+                    </div>
+                    <img src="6jancake.jpg" alt="First Cake Chai Date" />
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-card">
+                    <div class="date">January 13, 2025</div>
+                    <div class="title">Our Momoman Momo Date</div>
+                    <div class="desc">
+                        Steaming plates of momos, laughter echoing, and my heart calling you 'my momo.' That day, we found joy in the little things and in each other. Every momo was a bite of happiness, and every moment with you is a feast for my soul.
+                    </div>
+                    <img src="momo13.jpg" alt="Our Momoman Momo Date" />
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-card">
+                    <div class="date">February 13, 2025</div>
+                    <div class="title">Our Temple Date – Iskon</div>
+                    <div class="desc">
+                        In the divine presence of RadhaKrishna, I prayed for our love to be blessed, for strength to be the Krishna to my Radha. Surrounded by devotion and serenity, I wished for a lifetime of togetherness, guided by faith and love.
+                    </div>
+                    <img src="004-Sri_Sri_Radha_Shyamsundar_with_Lalita_Vishakha_-_2560x1600-1024x640.png" alt="Iskon Temple Date" />
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-card">
+                    <div class="date">July 13, 2035</div>
+                    <div class="title">Our First Adventure Together</div>
+                    <div class="desc">
+                        Udaipur—the city of lakes, where our hearts wandered and our souls danced together for the very first time. Every street, every sunset, every shared laugh became a memory etched in gold. Our first trip as a couple, and the beginning of a lifetime of adventures side by side.
+                    </div>
+                    <img src="footinfoot.jpg" alt="First Trip Together" />
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-card">
+                    <div class="date">July 4, 2025</div>
+                    <div class="title">Our First Movie Date: Metro In Dino</div>
+                    <div class="desc">
+                        The lights dimmed, the world faded, and it was just us—hearts racing, hands brushing, laughter echoing in the dark. Watching 'Metro In Dino' together, we shared popcorn, smiles, and a thousand unspoken feelings. Our first movie date became a reel of memories, a new chapter in our love story, and a promise of many more cinematic adventures to come.
+                    </div>
+                    <img src="metroindino.png" alt="Metro In Dino Movie Date" />
+                </div>
+            </div>
+        </div>
+        <!-- Proposal Section -->
+        <div class="proposal-section fade-in">
+            <div class="proposal-text">
+                "Babyyy, every moment with you has been a blessing. You've made my life complete in ways I never imagined possible. From the first time we met, to every laugh we've shared, every tear we've wiped, every dream we've dreamed together - you've been my rock, my love, my everything.
+                <br><br>
+                Now, I want to ask you the most important question of my life..."
+            </div>
+            <div class="proposal-buttons">
+                <button class="btn btn-yes" onclick="showSuccess()">Yes, I accept your official proposal! 💖</button>
+                <button class="btn btn-no" onclick="showNoPopup()">No</button>
+            </div>
+        </div>
+        <!-- Success Section -->
+        <div class="success-section" id="successSection">
+            <div class="celebration">🎉💕🎊</div>
+            <h2>Welcome to My World!</h2>
+            <p>
+                Fasten your seatbelt, my queen! You've just said yes to being my girlfriend and, one day, my future wife. This is the start of the most incredible journey of happiness, love, and endless adventures together.<br><br>
+                From this moment forward, every sunrise will be more beautiful because I'll wake up knowing you're mine. Every challenge will be easier because we'll face it together. Every dream will be sweeter because we'll dream it together.<br><br>
+                You're not just my girlfriend now, but my partner, my best friend, and my future wife. I promise to love you more with each passing day, to be your strength when you need it, your comfort when you're sad, and your biggest cheerleader always.<br><br>
+                Here's to our forever and ever! 💑✨
+            </p>
+            <div class="celebration">💖💍💖</div>
+        </div>
+    </div>
+    <!-- Sweet No Popup -->
+    <div class="modal" id="noPopup" style="display:none; z-index:3000;">
+        <div class="modal-content">
+            <p style="font-size:1.2rem; color:var(--accent);">
+                Pleajjjjjjj - Pleajjjjjjjjjj- Pleajjjjjjjjjjj<br>
+                ab koi ek tango pr khada ho jaye to phir koi kya hi kr sakta h
+            </p>
+            <button onclick="noToYes()">thikeee huhhhh</button>
+        </div>
+    </div>
+    <script>
+        // Floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.getElementById('floatingHearts').appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 7000);
+        }
+        setInterval(createHeart, 350);
+        // Modal logic
+        function proceedToJourney() {
+            document.getElementById('welcomeModal').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('welcomeModal').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                // Play music
+                const audio = document.getElementById('backgroundMusic');
+                audio.play();
+            }, 500);
+        }
+        // Show success section
+        function showSuccess() {
+            document.querySelector('.proposal-section').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            for(let i = 0; i < 50; i++) {
+                setTimeout(() => { createHeart(); }, i * 100);
+            }
+        }
+        // Show sweet No popup
+        function showNoPopup() {
+            document.getElementById('noPopup').style.display = 'flex';
+        }
+        function noToYes() {
+            document.getElementById('noPopup').style.display = 'none';
+            showSuccess();
+        }
+    </script>
+</body>
+</html> 
